@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
 const Users = require('./user-model');
+const secrets = require('./secrets');
 
 router.post("/register", (req, res) => {
     let user = req.body;
@@ -42,7 +42,7 @@ router.post("/login", (req, res) => {
           userId: user.id,
           username: user.username
       };
-      const secret = process.env.JWT_SECRET || 'keep it secret, keep it safe';
+      const secret = secrets || 'keep it secret, keep it safe';
 
       const options = {
           expiresIn: '1d',
