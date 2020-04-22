@@ -1,3 +1,7 @@
+const jwt = require("jsonwebtoken");
+
+const secrets = require('./secrets');
+
 module.exports = (req, res, next) => {
     const token = req.headers.authorization;
 
@@ -14,6 +18,6 @@ module.exports = (req, res, next) => {
         }
     });
     } else {
-    res.status(400).json({message: "please provide creds!"});
+    res.status(400).json({message: "please provide credentials!"});
     }
   }; 

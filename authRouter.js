@@ -21,6 +21,7 @@ router.post("/register", (req, res) => {
 
 router.post("/login", (req, res) => {
     let { username, password } = req.body;
+    
     Users.findBy({ username })
       .then(([user]) => {
         if (user && bcrypt.compareSync(password, user.password)) {
@@ -37,18 +38,30 @@ router.post("/login", (req, res) => {
       });
   });
 
+  router.get("/logout", (req, res) => {
+    if (req.session) {
+        req.session.destroy(err => {
+            if(err) {
+                res.status(500).json({errorMessage: "Failed to logout"})
+            } else {
+                res.status(200).json({message: "Successfuly logged out"})
+            }
+        });
+    }
+})
+
   function generateToken(user) {
       const payload = {
           userId: user.id,
           username: user.username
       };
-      const secret = secrets || 'keep it secret, keep it safe';
+      const secret = secrets.jwtSecret;
 
       const options = {
           expiresIn: '1d',
       };
 
-      return jwt.sign(payload, secret, option);
+      return jwt.sign(payload, secret, options);
   };
 
   module.exports = router; 
